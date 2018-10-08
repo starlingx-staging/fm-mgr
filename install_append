@@ -1,0 +1,15 @@
+pushd fm-mgr/sources
+version=%{version}
+make DEST_DIR=%{buildroot} MAJOR=${version%%.*} MINOR=${version##*.} install_non_bb
+#manually install these files which are not correctly done in make install_non_bb
+%global _sysconfdir '/usr/local/etc'
+install -d %{buildroot}/usr/lib/systemd/system
+install -m 755 -d %{buildroot}/%{_sysconfdir}
+install -m 755 -d %{buildroot}/%{_sysconfdir}/init.d
+install -m 755 -d %{buildroot}/%{_sysconfdir}/logrotate.d
+install -m 755 fminit %{buildroot}/%{_sysconfdir}/init.d/fminit
+install -m 755 fmManager %{buildroot}/usr/local/bin/fmManager
+install -m 644 fm.logrotate %{buildroot}/%{_sysconfdir}/logrotate.d/fm.logrotate
+install -m 644 fminit.service %{buildroot}/usr/lib/systemd/system/fminit.service
+popd
+
